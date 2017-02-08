@@ -1,9 +1,9 @@
 'use strict'
 
 const onHeaders = require('on-headers')
-const headers = []
 
 module.exports = function serverTiming (options) {
+  const headers = []
   const opts = options || { total: true }
   return (_, res, next) => {
     if (res.setMetric) {
@@ -12,7 +12,7 @@ module.exports = function serverTiming (options) {
 
     let startAt = process.hrtime()
 
-    res.setMetric = setMetric
+    res.setMetric = setMetric(headers)
 
     onHeaders(res, () => {
       if (opts.total) {
@@ -28,19 +28,21 @@ module.exports = function serverTiming (options) {
   }
 }
 
-function setMetric (name, value, description) {
-  if (typeof name !== 'string') {
-    return console.warn('1st argument name is not string')
-  }
-  if (typeof value !== 'number') {
-    return console.warn('2nd argument value is not number')
-  }
+function setMetric (headers) {
+  return (name, value, description) => {
+    if (typeof name !== 'string') {
+      return console.warn('1st argument name is not string')
+    }
+    if (typeof value !== 'number') {
+      return console.warn('2nd argument value is not number')
+    }
 
-  let metric = `${name}=${value}`
+    let metric = `${name}=${value}`
 
-  if (typeof description === 'string') {
-    metric += `; "${description}"`
+    if (typeof description === 'string') {
+      metric += `; "${description}"`
+    }
+
+    headers.push(metric)
   }
-
-  headers.push(metric)
 }
