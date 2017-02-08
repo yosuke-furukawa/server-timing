@@ -28,7 +28,7 @@ module.exports = function serverTiming (options) {
   }
 }
 
-function setMetric(headers) {
+function setMetric (headers) {
   return (name, value, description) => {
     if (typeof name !== 'string') {
       return console.warn('1st argument name is not string')

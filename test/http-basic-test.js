@@ -44,7 +44,7 @@ test('http append more server timing response', () => {
 })
 
 test('http request twice more server timing response', () => {
-  let count = 0;
+  let count = 0
   const server = http.createServer((req, res) => {
     serverTiming()(req, res)
     if (count === 0) {
