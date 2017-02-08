@@ -1,0 +1,36 @@
+{
+  "name": "server-timing",
+  "version": "1.0.0",
+  "description": "This module can add `ServerTiming` Header to http response, and be able to use express middleware",
+  "main": "index.js",
+  "scripts": {
+    "test": "eater",
+    "lint": "standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/yosuke-furukawa/server-timing.git"
+  },
+  "keywords": [
+    "server-timing",
+    "express",
+    "middleware",
+    "performance"
+  ],
+  "author": "yosuke-furukawa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yosuke-furukawa/server-timing/issues"
+  },
+  "homepage": "https://github.com/yosuke-furukawa/server-timing#readme",
+  "dependencies": {
+    "on-headers": "^1.0.1"
+  },
+  "devDependencies": {
+    "assert-stream": "^1.1.1",
+    "eater": "^3.2.0",
+    "express": "^4.14.1",
+    "must-call": "^1.0.0",
+    "standard": "^8.6.0"
+  }
+}
