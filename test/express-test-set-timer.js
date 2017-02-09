@@ -8,9 +8,16 @@ const assert = require('assert')
 const mustCall = require('must-call')
 const AssertStream = require('assert-stream')
 
-test('express total response', () => {
+test('express use startTime/endTime', () => {
   const app = express()
   app.use(serverTiming())
+  app.use((req, res, next) => {
+    res.startTime('hoge', 'Hoge')
+    setTimeout(() => {
+      res.endTime('hoge')
+      next()
+    }, 1000)
+  })
   app.use((req, res, next) => {
     res.send('hello')
   })
@@ -19,50 +26,33 @@ test('express total response', () => {
       const assertStream = new AssertStream()
       assertStream.expect('hello')
       res.pipe(assertStream)
-      assert(/total=.*; "Total Response Time"/.test(res.headers['server-timing']))
+      assert(/^hoge=.*; "Hoge", total=.*; "Total Response Time"$/.test(res.headers['server-timing']))
       server.close()
     }))
   })
 })
 
-test('express add some custom server timing header', () => {
+test('express use startTime/endTime multiple', () => {
   const app = express()
   app.use(serverTiming())
   app.use((req, res, next) => {
-    res.setMetric('foo', 100.0)
-    res.setMetric('bar', 10.0, 'Bar is not Foo')
-    res.setMetric('baz', 0)
+    res.startTime('hoge', 'Hoge')
+    setTimeout(() => {
+      res.endTime('hoge')
+      next()
+    }, 1000)
+  })
+  app.use((req, res, next) => {
     res.send('hello')
   })
-  const server = app.listen(0, () => {
+  const checkFunc = () => {
     http.get(`http://localhost:${server.address().port}/`, mustCall((res) => {
       const assertStream = new AssertStream()
       assertStream.expect('hello')
       res.pipe(assertStream)
-      const timingHeader = res.headers['server-timing']
-      assert(/total=.*; "Total Response Time"/.test(timingHeader))
-      assert(/foo=100, bar=10; "Bar is not Foo", baz=0/.test(timingHeader))
+      assert(/^hoge=.*; "Hoge", total=.*; "Total Response Time"$/.test(res.headers['server-timing']))
       server.close()
     }))
-  })
-})
-
-test('express request twice and check idempotent', () => {
-  const app = express()
-  app.use(serverTiming())
-  app.use((req, res, next) => {
-    res.setMetric('foo', 100.0)
-    res.setMetric('bar', 10.0, 'Bar is not Foo')
-    res.setMetric('baz', 0)
-    res.send('hello')
-  })
-  const checkFunc = (res) => {
-    const assertStream = new AssertStream()
-    assertStream.expect('hello')
-    res.pipe(assertStream)
-    const timingHeader = res.headers['server-timing']
-    assert(/^foo=100, bar=10; "Bar is not Foo", baz=0, total=.*; "Total Response Time"$/.test(timingHeader))
-    server.close()
   }
   const server = app.listen(0, () => {
     http.get(`http://localhost:${server.address().port}/`, mustCall(checkFunc))

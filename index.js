@@ -4,26 +4,27 @@ const onHeaders = require('on-headers')
 const Timer = require('./timer')
 
 module.exports = function serverTiming (options) {
-  const headers = []
-  const timer = new Timer()
   const opts = options || { total: true }
   return (_, res, next) => {
+    const headers = []
+    const timer = new Timer()
     if (res.setMetric) {
       throw new Error('res.setMetric already exists.')
     }
 
-    let startAt = process.hrtime()
+    const startAt = process.hrtime()
 
-    res.startTime = startTime(timer)
-    res.endTime = endTime(timer)
     res.setMetric = setMetric(headers)
+    res.startTime = startTime(timer)
+    res.endTime = endTime(timer, res)
 
     onHeaders(res, () => {
       if (opts.total) {
-        let diff = process.hrtime(startAt)
-        let timeSec = (diff[0] + diff[1] * 1e3)
+        const diff = process.hrtime(startAt)
+        const timeSec = (diff[0] + diff[1] * 1e-9)
         headers.push(`total=${timeSec}; "Total Response Time"`)
       }
+      timer.clear()
       res.setHeader('Server-Timing', headers.join(', '))
     })
     if (typeof next === 'function') {
@@ -41,17 +42,14 @@ function setMetric (headers) {
       return console.warn('2nd argument value is not number')
     }
 
-    let metric = `${name}=${value}`
-
-    if (typeof description === 'string') {
-      metric += `; "${description}"`
-    }
+    const metric = typeof description !== 'string' || !description
+      ? `${name}=${value}` : `${name}=${value}; "${description}"`
 
     headers.push(metric)
   }
 }
 
-function startTime(timer) {
+function startTime (timer) {
   return (name, description) => {
     if (typeof name !== 'string') {
       return console.warn('1st argument name is not string')
@@ -61,13 +59,16 @@ function startTime(timer) {
   }
 }
 
-function endTime(timer) {
+function endTime (timer, res) {
   return (name) => {
     if (typeof name !== 'string') {
       return console.warn('1st argument name is not string')
     }
 
     const obj = timer.timeEnd(name)
-    this.setMetric(obj.name, obj.value, obj.description)
+    if (!obj) {
+      return
+    }
+    res.setMetric(obj.name, obj.value, obj.description)
   }
 }

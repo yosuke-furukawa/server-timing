@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const serverTiming = require('../.')
+const serverTiming = require('server-timing')
 const PORT = process.env.PORT || 3000
 
 app.use(serverTiming())
@@ -11,7 +11,14 @@ app.use((req, res, next) => {
   next()
 })
 app.use((req, res, next) => {
-  res.send('hello')
+  res.startTime('file', 'file io metric')
+  setTimeout(() => {
+    res.endTime('file')
+    next()
+  }, 1000)
+})
+app.use((req, res, next) => {
+  res.send('Open DevTools and See Network tab')
 })
 
 app.listen(PORT, () => {
