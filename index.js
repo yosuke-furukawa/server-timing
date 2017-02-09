@@ -3,9 +3,9 @@
 const onHeaders = require('on-headers')
 
 module.exports = function serverTiming (options) {
-  const headers = []
   const opts = options || { total: true }
   return (_, res, next) => {
+    const headers = []
     if (res.setMetric) {
       throw new Error('res.setMetric already exists.')
     }

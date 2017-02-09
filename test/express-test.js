@@ -47,3 +47,29 @@ test('express add some custom server timing header', () => {
   })
 })
 
+test('express request twice and check idempotent', () => {
+  const app = express()
+  app.use(serverTiming())
+  app.use((req, res, next) => {
+    res.setMetric('foo', 100.0)
+    res.setMetric('bar', 10.0, 'Bar is not Foo')
+    res.setMetric('baz', 0)
+    res.send('hello')
+  })
+  const checkFunc = (res) => {
+    const assertStream = new AssertStream()
+    assertStream.expect('hello')
+    res.pipe(assertStream)
+    const timingHeader = res.headers['server-timing']
+    assert(/^foo=100, bar=10; "Bar is not Foo", baz=0, total=.*; "Total Response Time"$/.test(timingHeader))
+    server.close()
+  }
+  const server = app.listen(0, () => {
+    http.get(`http://localhost:${server.address().port}/`, mustCall(checkFunc))
+    http.get(`http://localhost:${server.address().port}/`, mustCall(checkFunc))
+    http.get(`http://localhost:${server.address().port}/`, mustCall(checkFunc))
+    http.get(`http://localhost:${server.address().port}/`, mustCall(checkFunc))
+    http.get(`http://localhost:${server.address().port}/`, mustCall(checkFunc))
+  })
+})
+
