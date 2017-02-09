@@ -11,7 +11,7 @@ app.use((req, res, next) => {
   next()
 })
 app.use((req, res, next) => {
-  res.send('hello')
+  res.send('Open DevTools and See Network tab')
 })
 
 app.listen(PORT, () => {
