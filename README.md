@@ -1,4 +1,6 @@
 # server-timing
+[![Build Status](https://travis-ci.org/yosuke-furukawa/server-timing.svg?branch=master)](https://travis-ci.org/yosuke-furukawa/server-timing)
+[![Coverage Status](https://coveralls.io/repos/github/yosuke-furukawa/server-timing/badge.svg?branch=improve_coverage)](https://coveralls.io/github/yosuke-furukawa/server-timing?branch=improve_coverage)
 
 This module adds [Server-Timing](https://www.w3.org/TR/server-timing/) to response headers.
 
@@ -14,6 +16,8 @@ $ npm install server-timing -S
 
 ```javascript
 const express = require('express')
+const serverTiming = require('server-timing')
+
 const app = express()
 app.use(serverTiming())
 
