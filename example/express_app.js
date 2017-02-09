@@ -11,6 +11,13 @@ app.use((req, res, next) => {
   next()
 })
 app.use((req, res, next) => {
+  res.startTime('file', 'file io metric')
+  setTimeout(() => {
+    res.endTime('file')
+    next()
+  }, 1000)
+})
+app.use((req, res, next) => {
   res.send('Open DevTools and See Network tab')
 })
 

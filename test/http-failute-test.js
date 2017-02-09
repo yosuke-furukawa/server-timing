@@ -22,7 +22,7 @@ test('failure: res.setMetric is already defined', () => {
   })
 })
 
-test('failure: 1st argument is not string', () => {
+test('failure: setMetric 1st argument is not string', () => {
   console.warn = mustCall((message) => {
     assert(message === '1st argument name is not string')
   })
@@ -37,7 +37,7 @@ test('failure: 1st argument is not string', () => {
   })
 })
 
-test('failure: 2nd argument is not number', () => {
+test('failure: setMetric 2nd argument is not number', () => {
   console.warn = mustCall((message) => {
     assert(message === '2nd argument value is not number')
   })
@@ -52,3 +52,49 @@ test('failure: 2nd argument is not number', () => {
   })
 })
 
+test('failure: startTime 1st argument is not string', () => {
+  console.warn = mustCall((message) => {
+    assert(message === '1st argument name is not string')
+  })
+  const server = http.createServer((req, res) => {
+    serverTiming()(req, res)
+    res.startTime()
+    res.end('hello')
+  }).listen(0, () => {
+    http.get(`http://localhost:${server.address().port}/`, mustCall((res) => {
+      server.close()
+    }))
+  })
+})
+
+test('failure: endTime 1st argument is not string', () => {
+  console.warn = mustCall((message) => {
+    assert(message === '1st argument name is not string')
+  })
+  const server = http.createServer((req, res) => {
+    serverTiming()(req, res)
+    res.startTime('hoge')
+    res.endTime()
+    res.end('hello')
+  }).listen(0, () => {
+    http.get(`http://localhost:${server.address().port}/`, mustCall((res) => {
+      server.close()
+    }))
+  })
+})
+
+test('failure: mismatch endTime label to startTime label', () => {
+  console.warn = mustCall((message) => {
+    assert(message === 'No such name hoge')
+  })
+  const server = http.createServer((req, res) => {
+    serverTiming()(req, res)
+    res.startTime('fuga')
+    res.endTime('hoge')
+    res.end('hello')
+  }).listen(0, () => {
+    http.get(`http://localhost:${server.address().port}/`, mustCall((res) => {
+      server.close()
+    }))
+  })
+})
