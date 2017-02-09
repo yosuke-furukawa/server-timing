@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/yosuke-furukawa/server-timing/badge.svg?branch=improve_coverage)](https://coveralls.io/github/yosuke-furukawa/server-timing?branch=improve_coverage)
 
 This module adds [Server-Timing](https://www.w3.org/TR/server-timing/) to response headers.
-Example is [here](https://example-tsjqdeqzcu.now.sh/) and open chrome devtool network tab.
+Example is [here](https://server-timing.now.sh/) and open chrome devtool network tab.
 
 You can use this as a express module / basic http function.
 
