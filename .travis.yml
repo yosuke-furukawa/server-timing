@@ -3,7 +3,7 @@ node_js:
   - "4"
   - "6"
   - "7"
-script: npm test
+script: npm run coveralls
 sudo: false
 cache:
   directories:

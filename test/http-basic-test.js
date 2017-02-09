@@ -7,7 +7,7 @@ const assert = require('assert')
 const mustCall = require('must-call')
 const AssertStream = require('assert-stream')
 
-test('http total response', () => {
+test('success: http total response', () => {
   const server = http.createServer((req, res) => {
     serverTiming()(req, res)
     res.end('hello')
@@ -22,7 +22,7 @@ test('http total response', () => {
   })
 })
 
-test('http append more server timing response', () => {
+test('success: http append more server timing response', () => {
   const server = http.createServer((req, res) => {
     serverTiming()(req, res)
     res.setMetric('foo', 100.0)
@@ -43,7 +43,7 @@ test('http append more server timing response', () => {
   })
 })
 
-test('http request twice more server timing response', () => {
+test('success: http request twice more server timing response', () => {
   let count = 0
   const server = http.createServer((req, res) => {
     serverTiming()(req, res)
@@ -77,6 +77,21 @@ test('http request twice more server timing response', () => {
         assert(/test=0.1; "Test"/.test(timingHeader))
         server.close()
       }))
+    }))
+  })
+})
+
+test('success: no total response', () => {
+  const server = http.createServer((req, res) => {
+    serverTiming({ total: false })(req, res)
+    res.end('hello')
+  }).listen(0, () => {
+    http.get(`http://localhost:${server.address().port}/`, mustCall((res) => {
+      const assertStream = new AssertStream()
+      assertStream.expect('hello')
+      res.pipe(assertStream)
+      assert(!res.headers['server-timing'])
+      server.close()
     }))
   })
 })
