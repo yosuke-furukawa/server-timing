@@ -23,11 +23,21 @@ const app = express()
 app.use(serverTiming())
 
 app.use((req, res, next) => {
-  res.setMetric('db', 100.0, "Database metric");
-  res.setMetric('api', 200.0, "HTTP/API metric");
-  res.setMetric('cache', 300.0, "cache metric");
-  next();
-});
+  res.startTime('file', "File IO metric")
+  setTimeout(() => {
+    res.endTime('file')
+  }, 100)
+  next()
+})
+app.use((req, res, next) => {
+  res.setMetric('db', 100.0, "Database metric")
+  res.setMetric('api', 200.0, "HTTP/API metric")
+  res.setMetric('cache', 300.0, "cache metric")
+  next()
+})
+app.use((req, res, next) => {
+  res.send('hello')
+})
 ```
 
 # Result
