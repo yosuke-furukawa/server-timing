@@ -23,9 +23,10 @@ const app = express()
 app.use(serverTiming())
 
 app.use((req, res, next) => {
-  res.startTime('file', "File IO metric")
+  const stopFileTimer = res.startTime('file', "File IO metric")
   setTimeout(() => {
-    res.endTime('file')
+    stopFileTimer();
+    // or; res.endTime('file')
   }, 100)
   next()
 })

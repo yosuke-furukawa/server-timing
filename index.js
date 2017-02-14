@@ -15,7 +15,7 @@ module.exports = function serverTiming (options) {
     const startAt = process.hrtime()
 
     res.setMetric = setMetric(headers)
-    res.startTime = startTime(timer)
+    res.startTime = startTime(timer, res)
     res.endTime = endTime(timer, res)
 
     onHeaders(res, () => {
@@ -49,13 +49,22 @@ function setMetric (headers) {
   }
 }
 
-function startTime (timer) {
+function startTime (timer, res) {
   return (name, description) => {
     if (typeof name !== 'string') {
       return console.warn('1st argument name is not string')
     }
 
     timer.time(name, description)
+
+    let ended = false;
+
+    return () => {
+      if (!ended) {
+        ended = true;
+        res.endTime(name);
+      }
+    }
   }
 }
 
