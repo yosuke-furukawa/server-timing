@@ -21,7 +21,7 @@ module.exports = function serverTiming (options) {
     onHeaders(res, () => {
       if (opts.total) {
         const diff = process.hrtime(startAt)
-        const timeSec = (diff[0] + diff[1] * 1e-9)
+        const timeSec = (diff[0] * 1E3) + (diff[1] * 1e-6)
         headers.push(`total=${timeSec}; "Total Response Time"`)
       }
       timer.clear()

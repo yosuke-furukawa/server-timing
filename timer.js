@@ -17,7 +17,7 @@ class Timer {
       return console.warn(`No such name ${name}`)
     }
     const duration = process.hrtime(timeObj.start)
-    const value = (duration[0] + duration[1] * 1e-9)
+    const value = (duration[0] * 1E3) + (duration[1] * 1e-6)
     timeObj.value = value
     this._times.delete(name)
     return timeObj
