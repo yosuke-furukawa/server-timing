@@ -30,6 +30,7 @@ app.use((req, res, next) => {
   next()
 })
 app.use((req, res, next) => {
+  // All timings should be in milliseconds (s). See issue #9 (https://github.com/yosuke-furukawa/server-timing/issues/9).
   res.setMetric('db', 100.0, "Database metric")
   res.setMetric('api', 200.0, "HTTP/API metric")
   res.setMetric('cache', 300.0, "cache metric")
