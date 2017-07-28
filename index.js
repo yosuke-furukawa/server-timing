@@ -25,7 +25,9 @@ module.exports = function serverTiming (options) {
         headers.push(`total=${timeSec}; "Total Response Time"`)
       }
       timer.clear()
-      res.setHeader('Server-Timing', headers.join(', '))
+
+      const existingHeaders = res.getHeader('Server-Timing')
+      res.setHeader('Server-Timing', [].concat(existingHeaders || []).concat(headers).join(', '))
     })
     if (typeof next === 'function') {
       next()
