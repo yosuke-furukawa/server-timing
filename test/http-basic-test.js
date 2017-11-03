@@ -16,7 +16,7 @@ test('success: http total response', () => {
       const assertStream = new AssertStream()
       assertStream.expect('hello')
       res.pipe(assertStream)
-      assert(/total=.*; "Total Response Time"/.test(res.headers['server-timing']))
+      assert(/total; duration=.*; description="Total Response Time"/.test(res.headers['server-timing']))
       server.close()
     }))
   })
@@ -36,8 +36,8 @@ test('success: http append more server timing response', () => {
       res.pipe(assertStream)
 
       const timingHeader = res.headers['server-timing']
-      assert(/total=.*; "Total Response Time"/.test(timingHeader))
-      assert(/foo=100, bar=10; "Bar is not Foo", baz=0/.test(timingHeader))
+      assert(/total; duration=.*; description="Total Response Time"/.test(timingHeader))
+      assert(/foo; duration=100, bar; duration=10; description="Bar is not Foo", baz; duration=0/.test(timingHeader))
       server.close()
     }))
   })
@@ -65,16 +65,16 @@ test('success: http request twice more server timing response', () => {
       res.pipe(assertStream)
 
       const timingHeader = res.headers['server-timing']
-      assert(/total=.*; "Total Response Time"/.test(timingHeader))
-      assert(/foo=100, bar=10; "Bar is not Foo", baz=0/.test(timingHeader))
+      assert(/total; duration=.*; description="Total Response Time"/.test(timingHeader))
+      assert(/foo; duration=100, bar; duration=10; description="Bar is not Foo", baz; duration=0/.test(timingHeader))
       http.get(`http://localhost:${server.address().port}/`, mustCall((res) => {
         const assertStream = new AssertStream()
         assertStream.expect('world')
         res.pipe(assertStream)
 
         const timingHeader = res.headers['server-timing']
-        assert(/total=.*; "Total Response Time"/.test(timingHeader))
-        assert(/test=0.1; "Test"/.test(timingHeader))
+        assert(/total; duration=.*; description="Total Response Time"/.test(timingHeader))
+        assert(/test; duration=0.1; description="Test"/.test(timingHeader))
         server.close()
       }))
     }))

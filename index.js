@@ -22,7 +22,7 @@ module.exports = function serverTiming (options) {
       if (opts.total) {
         const diff = process.hrtime(startAt)
         const timeSec = (diff[0] * 1E3) + (diff[1] * 1e-6)
-        headers.push(`total=${timeSec}; "Total Response Time"`)
+        headers.push(`total; duration=${timeSec}; description="Total Response Time"`)
       }
       timer.clear()
 
@@ -45,7 +45,7 @@ function setMetric (headers) {
     }
 
     const metric = typeof description !== 'string' || !description
-      ? `${name}=${value}` : `${name}=${value}; "${description}"`
+      ? `${name}; duration=${value}` : `${name}; duration=${value}; description="${description}"`
 
     headers.push(metric)
   }
