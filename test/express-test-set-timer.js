@@ -26,7 +26,7 @@ test('express use startTime/endTime', () => {
       const assertStream = new AssertStream()
       assertStream.expect('hello')
       res.pipe(assertStream)
-      assert(/^hoge=.*; "Hoge", total=.*; "Total Response Time"$/.test(res.headers['server-timing']))
+      assert(/^hoge; dur=.*; desc="Hoge", total; dur=.*; desc="Total Response Time"$/.test(res.headers['server-timing']))
       server.close()
     }))
   })
@@ -50,7 +50,7 @@ test('express use startTime/endTime multiple', () => {
       const assertStream = new AssertStream()
       assertStream.expect('hello')
       res.pipe(assertStream)
-      assert(/^hoge=.*; "Hoge", total=.*; "Total Response Time"$/.test(res.headers['server-timing']))
+      assert(/^hoge; dur=.*; desc="Hoge", total; dur=.*; desc="Total Response Time"$/.test(res.headers['server-timing']))
       server.close()
     }))
   }

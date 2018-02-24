@@ -19,7 +19,7 @@ test('express total response', () => {
       const assertStream = new AssertStream()
       assertStream.expect('hello')
       res.pipe(assertStream)
-      assert(/total=.*; "Total Response Time"/.test(res.headers['server-timing']))
+      assert(/total; dur=.*; desc="Total Response Time"/.test(res.headers['server-timing']))
       server.close()
     }))
   })
@@ -40,8 +40,8 @@ test('express add some custom server timing header', () => {
       assertStream.expect('hello')
       res.pipe(assertStream)
       const timingHeader = res.headers['server-timing']
-      assert(/total=.*; "Total Response Time"/.test(timingHeader))
-      assert(/foo=100, bar=10; "Bar is not Foo", baz=0/.test(timingHeader))
+      assert(/total; dur=.*; desc="Total Response Time"/.test(timingHeader))
+      assert(/foo; dur=100, bar; dur=10; desc="Bar is not Foo", baz; dur=0/.test(timingHeader))
       server.close()
     }))
   })
@@ -61,7 +61,7 @@ test('express request twice and check idempotent', () => {
     assertStream.expect('hello')
     res.pipe(assertStream)
     const timingHeader = res.headers['server-timing']
-    assert(/^foo=100, bar=10; "Bar is not Foo", baz=0, total=.*; "Total Response Time"$/.test(timingHeader))
+    assert(/^foo; dur=100, bar; dur=10; desc="Bar is not Foo", baz; dur=0, total; dur=.*; desc="Total Response Time"$/.test(timingHeader))
     server.close()
   }
   const server = app.listen(0, () => {
