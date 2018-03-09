@@ -32,6 +32,55 @@ test('express use startTime/endTime', () => {
   })
 })
 
+test('express use startTime stop function', () => {
+  const app = express()
+  app.use(serverTiming())
+  app.use((req, res, next) => {
+    const stop = res.startTime('hoge', 'Hoge')
+    setTimeout(() => {
+      stop();
+      next()
+    }, 1000)
+  })
+  app.use((req, res, next) => {
+    res.send('hello')
+  })
+  const server = app.listen(0, () => {
+    http.get(`http://localhost:${server.address().port}/`, mustCall((res) => {
+      const assertStream = new AssertStream()
+      assertStream.expect('hello')
+      res.pipe(assertStream)
+      assert(/^hoge=.*; "Hoge", total=.*; "Total Response Time"$/.test(res.headers['server-timing']))
+      server.close()
+    }))
+  })
+})
+
+test('express use startTime stop function idempotent', () => {
+  const app = express()
+  app.use(serverTiming())
+  app.use((req, res, next) => {
+    const stop = res.startTime('hoge', 'Hoge')
+    setTimeout(() => {
+      stop();
+      stop();
+      next()
+    }, 1000)
+  })
+  app.use((req, res, next) => {
+    res.send('hello')
+  })
+  const server = app.listen(0, () => {
+    http.get(`http://localhost:${server.address().port}/`, mustCall((res) => {
+      const assertStream = new AssertStream()
+      assertStream.expect('hello')
+      res.pipe(assertStream)
+      assert(/^hoge=.*; "Hoge", total=.*; "Total Response Time"$/.test(res.headers['server-timing']))
+      server.close()
+    }))
+  })
+})
+
 test('express use startTime/endTime multiple', () => {
   const app = express()
   app.use(serverTiming())
