@@ -83,7 +83,27 @@ test('success: http request twice more server timing response', () => {
 
 test('success: no total response', () => {
   const server = http.createServer((req, res) => {
-    serverTiming({ total: false })(req, res)
+    serverTiming({
+      total: false
+    })(req, res)
+    res.end('hello')
+  }).listen(0, () => {
+    http.get(`http://localhost:${server.address().port}/`, mustCall((res) => {
+      const assertStream = new AssertStream()
+      assertStream.expect('hello')
+      res.pipe(assertStream)
+      assert(!res.headers['server-timing'])
+      server.close()
+    }))
+  })
+})
+
+test('success: no response', () => {
+  const server = http.createServer((req, res) => {
+    serverTiming({
+      enabled: false
+    })(req, res)
+    res.setMetric('foo', 100.0)
     res.end('hello')
   }).listen(0, () => {
     http.get(`http://localhost:${server.address().port}/`, mustCall((res) => {
