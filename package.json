@@ -30,12 +30,12 @@
   },
   "devDependencies": {
     "assert-stream": "^1.1.1",
-    "coveralls": "^2.11.16",
+    "coveralls": "^3.0.3",
     "eater": "^3.2.0",
     "espower-loader": "^1.2.0",
     "express": "^4.14.1",
     "must-call": "^1.0.0",
-    "nyc": "^10.1.2",
+    "nyc": "^14.1.1",
     "power-assert": "^1.4.2",
     "standard": "^8.6.0"
   }
