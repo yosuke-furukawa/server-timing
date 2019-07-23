@@ -33,7 +33,7 @@
     "coveralls": "3.0.5",
     "eater": "3.2.0",
     "espower-loader": "1.2.2",
-    "express": "4.16.2",
+    "express": "4.17.1",
     "must-call": "1.0.0",
     "nyc": "14.1.1",
     "power-assert": "1.6.1",
