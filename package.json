@@ -31,7 +31,7 @@
   "devDependencies": {
     "assert-stream": "1.1.1",
     "coveralls": "3.0.7",
-    "eater": "3.2.0",
+    "eater": "4.0.0",
     "espower-loader": "1.2.2",
     "express": "4.17.1",
     "must-call": "1.0.0",
