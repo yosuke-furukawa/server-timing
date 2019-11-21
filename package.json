@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "assert-stream": "1.1.1",
-    "coveralls": "3.0.7",
+    "coveralls": "3.0.8",
     "eater": "4.0.0",
     "espower-loader": "1.2.2",
     "express": "4.17.1",
