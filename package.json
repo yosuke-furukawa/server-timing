@@ -1,6 +1,6 @@
 {
   "name": "server-timing",
-  "version": "2.1.1",
+  "version": "3.0.0",
   "description": "This module can add `ServerTiming` Header to http response, and be able to use express middleware",
   "main": "index.js",
   "scripts": {
