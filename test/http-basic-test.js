@@ -115,3 +115,20 @@ test('success: no response', () => {
     }))
   })
 })
+
+test('success: stop automatically timer', () => {
+  const server = http.createServer((req, res) => {
+    serverTiming({})(req, res)
+    res.startTime('foo', 'foo')
+    res.end('hello')
+  }).listen(0, () => {
+    http.get(`http://localhost:${server.address().port}/`, mustCall((res) => {
+      const assertStream = new AssertStream()
+      assertStream.expect('hello')
+      res.pipe(assertStream)
+      assert(res.headers['server-timing'])
+      console.log(res.headers)
+      server.close()
+    }))
+  })
+})

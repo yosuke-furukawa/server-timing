@@ -73,3 +73,20 @@ test('express request twice and check idempotent', () => {
   })
 })
 
+test('express stop automatic timer', () => {
+  const app = express()
+  app.use(serverTiming())
+  app.use((req, res, next) => {
+    res.startTime('hello', 'hello')
+    res.send('hello')
+  })
+  const server = app.listen(0, () => {
+    http.get(`http://localhost:${server.address().port}/`, mustCall((res) => {
+      const assertStream = new AssertStream()
+      assertStream.expect('hello')
+      res.pipe(assertStream)
+      assert(/hello; dur=.*; desc="hello", total; dur=.*; desc="Total Response Time"/.test(res.headers['server-timing']))
+      server.close()
+    }))
+  })
+})

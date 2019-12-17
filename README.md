@@ -31,6 +31,11 @@ app.use((req, res, next) => {
   next();
 });
 app.use((req, res, next) => {
+  // you can see test end time response
+  res.startTime('test', 'forget to call endTime');
+  next();
+});
+app.use((req, res, next) => {
   // All timings should be in milliseconds (s). See issue #9 (https://github.com/yosuke-furukawa/server-timing/issues/9).
   res.setMetric('db', 100.0, 'Database metric');
   res.setMetric('api', 200.0, 'HTTP/API metric');
@@ -46,8 +51,9 @@ app.use((req, res, next) => {
 
 ## constructor(options)
 
-- options.total: boolean, default `true`
-- options.enabled: boolean, default `true`
+- options.total: boolean, default `true`, add total response time
+- options.enabled: boolean, default `true`, enable server timing header 
+- options.autoEnd: boolean, default `true` automatically endTime is called if timer is not finished.
 
 # Result
 

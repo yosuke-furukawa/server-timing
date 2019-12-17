@@ -3,11 +3,12 @@
 const onHeaders = require('on-headers')
 const Timer = require('./timer')
 
-module.exports = function serverTiming(options) {
+module.exports = function serverTiming (options) {
   const opts = Object.assign({
     total: true,
-    enabled: true
-  }, options);
+    enabled: true,
+    autoEnd: true
+  }, options)
   return (_, res, next) => {
     const headers = []
     const timer = new Timer()
@@ -25,12 +26,19 @@ module.exports = function serverTiming(options) {
       if (opts.total) {
         const diff = process.hrtime(startAt)
         const timeSec = (diff[0] * 1E3) + (diff[1] * 1e-6)
+        if (opts.autoEnd) {
+          const keys = timer.keys()
+          for (const key of keys) {
+            res.endTime(key)
+          }
+        }
         headers.push(`total; dur=${timeSec}; desc="Total Response Time"`)
       }
       timer.clear()
 
       if (opts.enabled) {
         const existingHeaders = res.getHeader('Server-Timing')
+
         res.setHeader('Server-Timing', [].concat(existingHeaders || []).concat(headers).join(', '))
       }
     })
@@ -40,7 +48,7 @@ module.exports = function serverTiming(options) {
   }
 }
 
-function setMetric(headers) {
+function setMetric (headers) {
   return (name, value, description) => {
     if (typeof name !== 'string') {
       return console.warn('1st argument name is not string')
@@ -49,14 +57,14 @@ function setMetric(headers) {
       return console.warn('2nd argument value is not number')
     }
 
-    const metric = typeof description !== 'string' || !description ?
-      `${name}; dur=${value}` : `${name}; dur=${value}; desc="${description}"`
+    const metric = typeof description !== 'string' || !description
+      ? `${name}; dur=${value}` : `${name}; dur=${value}; desc="${description}"`
 
     headers.push(metric)
   }
 }
 
-function startTime(timer) {
+function startTime (timer) {
   return (name, description) => {
     if (typeof name !== 'string') {
       return console.warn('1st argument name is not string')
@@ -66,7 +74,7 @@ function startTime(timer) {
   }
 }
 
-function endTime(timer, res) {
+function endTime (timer, res) {
   return (name) => {
     if (typeof name !== 'string') {
       return console.warn('1st argument name is not string')

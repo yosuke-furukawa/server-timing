@@ -62,4 +62,3 @@ test('express use startTime/endTime multiple', () => {
     http.get(`http://localhost:${server.address().port}/`, mustCall(checkFunc))
   })
 })
-
