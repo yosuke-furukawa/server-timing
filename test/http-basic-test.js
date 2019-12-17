@@ -127,8 +127,8 @@ test('success: stop automatically timer', () => {
       assertStream.expect('hello')
       res.pipe(assertStream)
       assert(res.headers['server-timing'])
-      console.log(res.headers);
+      console.log(res.headers)
       server.close()
     }))
   })
-});
+})

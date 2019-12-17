@@ -4,6 +4,7 @@ class Timer {
   constructor () {
     this._times = new Map()
   }
+
   time (name, description) {
     this._times.set(name, {
       name: name,
@@ -11,6 +12,7 @@ class Timer {
       start: process.hrtime()
     })
   }
+
   timeEnd (name) {
     const timeObj = this._times.get(name)
     if (!timeObj) {
@@ -22,11 +24,13 @@ class Timer {
     this._times.delete(name)
     return timeObj
   }
+
   clear () {
     this._times.clear()
   }
+
   keys () {
-    return this._times.keys();
+    return this._times.keys()
   }
 }
 
