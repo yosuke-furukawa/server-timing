@@ -25,6 +25,9 @@ class Timer {
   clear () {
     this._times.clear()
   }
+  keys () {
+    return this._times.keys();
+  }
 }
 
 module.exports = Timer

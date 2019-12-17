@@ -18,6 +18,10 @@ app.use((req, res, next) => {
   }, 1000)
 })
 app.use((req, res, next) => {
+  res.startTime('test', 'endtime is automatically called')
+  next()
+})
+app.use((req, res, next) => {
   res.send('Open DevTools and See Network tab')
 })
 

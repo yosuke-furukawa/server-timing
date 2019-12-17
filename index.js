@@ -6,7 +6,8 @@ const Timer = require('./timer')
 module.exports = function serverTiming(options) {
   const opts = Object.assign({
     total: true,
-    enabled: true
+    enabled: true,
+    autoEnd: true,
   }, options);
   return (_, res, next) => {
     const headers = []
@@ -25,12 +26,19 @@ module.exports = function serverTiming(options) {
       if (opts.total) {
         const diff = process.hrtime(startAt)
         const timeSec = (diff[0] * 1E3) + (diff[1] * 1e-6)
+        if (opts.autoEnd) {
+          const keys = timer.keys();
+          for (const key of keys) {
+            res.endTime(key);
+          }
+        }
         headers.push(`total; dur=${timeSec}; desc="Total Response Time"`)
       }
       timer.clear()
 
       if (opts.enabled) {
         const existingHeaders = res.getHeader('Server-Timing')
+
         res.setHeader('Server-Timing', [].concat(existingHeaders || []).concat(headers).join(', '))
       }
     })
