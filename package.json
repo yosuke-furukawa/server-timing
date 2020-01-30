@@ -35,7 +35,7 @@
     "espower-loader": "1.2.2",
     "express": "4.17.1",
     "must-call": "1.0.0",
-    "nyc": "14.1.1",
+    "nyc": "15.0.0",
     "power-assert": "1.6.1",
     "standard": "14.3.1"
   }
