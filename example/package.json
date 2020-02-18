@@ -12,6 +12,6 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.14.1",
-    "server-timing": "^2.0.0"
+    "server-timing": "^3.0.0"
   }
 }
