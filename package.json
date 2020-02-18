@@ -3,6 +3,7 @@
   "version": "3.0.0",
   "description": "This module can add `ServerTiming` Header to http response, and be able to use express middleware",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "eater --require .loader.js",
     "lint": "standard",
@@ -26,6 +27,8 @@
   },
   "homepage": "https://github.com/yosuke-furukawa/server-timing#readme",
   "dependencies": {
+    "@types/express": "^4.17.2",
+    "@types/node": "^12.12.18",
     "on-headers": "^1.0.1"
   },
   "devDependencies": {
