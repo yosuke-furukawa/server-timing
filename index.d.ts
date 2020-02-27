@@ -5,7 +5,8 @@ declare module "server-timing" {
     enabled?: boolean;
     autoEnd?: boolean;
   };
-  export default (opts?: Options) => e.RequestHandler;
+  const _default: (opts?: Options) => e.RequestHandler;
+  export default _default;
   type Response = {
     startTime: (name: string, desc: string) => void;
     endTime: (name: string) => void;
