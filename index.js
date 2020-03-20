@@ -23,15 +23,16 @@ module.exports = function serverTiming (options) {
     res.endTime = endTime(timer, res)
 
     onHeaders(res, () => {
+      if (opts.autoEnd) {
+        const keys = timer.keys()
+        for (const key of keys) {
+          res.endTime(key)
+        }
+      }
+
       if (opts.total) {
         const diff = process.hrtime(startAt)
         const timeSec = (diff[0] * 1E3) + (diff[1] * 1e-6)
-        if (opts.autoEnd) {
-          const keys = timer.keys()
-          for (const key of keys) {
-            res.endTime(key)
-          }
-        }
         headers.push(`total; dur=${timeSec}; desc="Total Response Time"`)
       }
       timer.clear()

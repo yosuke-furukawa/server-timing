@@ -90,3 +90,21 @@ test('express stop automatic timer', () => {
     }))
   })
 })
+
+test('express stop automatic timer (without total)', () => {
+  const app = express()
+  app.use(serverTiming({total: false}))
+  app.use((req, res, next) => {
+    res.startTime('hello', 'hello')
+    res.send('hello')
+  })
+  const server = app.listen(0, () => {
+    http.get(`http://localhost:${server.address().port}/`, mustCall((res) => {
+      const assertStream = new AssertStream()
+      assertStream.expect('hello')
+      res.pipe(assertStream)
+      assert(/hello; dur=.*; desc="hello"$/.test(res.headers['server-timing']))
+      server.close()
+    }))
+  })
+})
