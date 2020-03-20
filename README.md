@@ -53,7 +53,8 @@ app.use((req, res, next) => {
 
 - options.total: boolean, default `true`, add total response time
 - options.enabled: boolean, default `true`, enable server timing header 
-- options.autoEnd: boolean, default `true` automatically endTime is called if timer is not finished.
+- options.autoEnd: boolean, default `true`, automatically endTime is called if timer is not finished.
+- options.precision: number, default `+Infinity`, number of decimals to use for timings.
 
 # Result
 

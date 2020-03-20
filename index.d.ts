@@ -4,6 +4,7 @@ declare module "server-timing" {
     total?: boolean;
     enabled?: boolean;
     autoEnd?: boolean;
+    precision?: number;
   };
   const _default: (opts?: Options) => e.RequestHandler;
   export default _default;
