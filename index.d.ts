@@ -2,7 +2,7 @@ declare module "server-timing" {
   import * as e from "express";
   type Options = {
     total?: boolean;
-    enabled?: boolean;
+    enabled?: boolean | IsEnabledCheck;
     autoEnd?: boolean;
     precision?: number;
   };
@@ -12,5 +12,6 @@ declare module "server-timing" {
     startTime: (name: string, desc: string) => void;
     endTime: (name: string) => void;
   };
+  export type IsEnabledCheck = (req: e.Request, res: e.Response) => boolean
   export type SeverTimingResponse = e.Response & Response;
 }

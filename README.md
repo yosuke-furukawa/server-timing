@@ -47,13 +47,26 @@ app.use((req, res, next) => {
 });
 ```
 
+## Conditionally enabled
+
+```javascript
+const express = require('express');
+const serverTiming = require('server-timing');
+
+const app = express();
+app.use(serverTiming({
+  // Only send metrics if query parameter `debug` is set to `true`
+  enabled: (req, res) => req.query.debug === 'true'
+}));
+```
+
 # API
 
 ## constructor(options)
 
 - options.total: boolean, default `true`, add total response time
-- options.enabled: boolean, default `true`, enable server timing header 
-- options.autoEnd: boolean, default `true`, automatically endTime is called if timer is not finished.
+- options.enabled: boolean | function, default `true`, enable server timing header. If a function is passed, it will be called with two arguments, `request` and `response`, and should return a boolean.
+- options.autoEnd: boolean, default `true` automatically endTime is called if timer is not finished.
 - options.precision: number, default `+Infinity`, number of decimals to use for timings.
 
 # Result

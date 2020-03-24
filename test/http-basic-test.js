@@ -2,6 +2,7 @@
 
 const test = require('eater/runner').test
 const http = require('http')
+const {URL} = require('url')
 const serverTiming = require('../.')
 const assert = require('assert')
 const mustCall = require('must-call')
@@ -112,6 +113,34 @@ test('success: no response', () => {
       res.pipe(assertStream)
       assert(!res.headers['server-timing'])
       server.close()
+    }))
+  })
+})
+
+test('success: no response (conditional)', () => {
+  const server = http.createServer((req, res) => {
+    serverTiming({
+      enabled: req => {
+        const url = new URL(req.url, `http://${req.headers.host}`)
+        return url.searchParams.get("debug") === "true"
+      }
+    })(req, res)
+    res.setMetric('foo', 100.0)
+    res.end('hello')
+  }).listen(0, () => {
+    http.get(`http://localhost:${server.address().port}/?debug=true`, mustCall((res) => {
+      const assertStream = new AssertStream()
+      assertStream.expect('hello')
+      res.pipe(assertStream)
+      assert(res.headers['server-timing'])
+
+      http.get(`http://localhost:${server.address().port}/?debug=false`, mustCall((res) => {
+        const assertStream = new AssertStream()
+        assertStream.expect('hello')
+        res.pipe(assertStream)
+        assert(!res.headers['server-timing'])
+        server.close()
+      }))
     }))
   })
 })

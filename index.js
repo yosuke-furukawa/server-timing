@@ -10,7 +10,7 @@ module.exports = function serverTiming (options) {
     autoEnd: true,
     precision: +Infinity
   }, options)
-  return (_, res, next) => {
+  return (req, res, next) => {
     const headers = []
     const timer = new Timer()
     if (res.setMetric) {
@@ -38,7 +38,10 @@ module.exports = function serverTiming (options) {
       }
       timer.clear()
 
-      if (opts.enabled) {
+      const enabled = typeof opts.enabled === 'function'
+        ? opts.enabled(req, res) : opts.enabled
+
+      if (enabled) {
         const existingHeaders = res.getHeader('Server-Timing')
 
         res.setHeader('Server-Timing', [].concat(existingHeaders || []).concat(headers).join(', '))
