@@ -8,10 +8,18 @@ declare module "server-timing" {
   };
   const _default: (opts?: Options) => e.RequestHandler;
   export default _default;
-  type Response = {
+  type _Response = {
     startTime: (name: string, desc: string) => void;
     endTime: (name: string) => void;
+    setMetric: (name: string, value: number, description?: string) => void;
   };
   export type IsEnabledCheck = (req: e.Request, res: e.Response) => boolean
-  export type SeverTimingResponse = e.Response & Response;
+  export type SeverTimingResponse = e.Response & _Response;
+
+  global {
+    namespace Express {
+      interface Response extends _Response {
+      }
+    }
+  }
 }
