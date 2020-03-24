@@ -180,3 +180,27 @@ test('success: stop automatically timer (without total)', () => {
     }))
   })
 })
+
+test('success: specify precision', () => {
+  const server = http.createServer((req, res) => {
+    serverTiming({precision: 3})(req, res)
+    res.setMetric('manual', 100 / 3)
+    res.startTime('auto')
+    process.nextTick(() => {
+      res.endTime('auto')
+      res.end('hello')
+    })
+  }).listen(0, () => {
+    http.get(`http://localhost:${server.address().port}/`, mustCall((res) => {
+      const assertStream = new AssertStream()
+      assertStream.expect('hello')
+      res.pipe(assertStream)
+      const timingHeader = res.headers['server-timing']
+      assert(timingHeader)
+      assert(/total; dur=\d+\.\d{3}[;,]/.test(timingHeader))
+      assert(/manual; dur=\d+\.\d{3}[;,]/.test(timingHeader))
+      assert(/auto; dur=\d+\.\d{3}[;,]/.test(timingHeader))
+      server.close()
+    }))
+  })
+})

@@ -108,3 +108,28 @@ test('express stop automatic timer (without total)', () => {
     }))
   })
 })
+
+test('express specify precision', () => {
+  const app = express()
+  app.use(serverTiming({precision: 2}))
+  app.use((req, res, next) => {
+    res.setMetric('manual', 100 / 3)
+    res.startTime('auto')
+    process.nextTick(() => {
+      res.endTime('auto')
+      res.send('hello')
+    })
+  })
+  const server = app.listen(0, () => {
+    http.get(`http://localhost:${server.address().port}/`, mustCall((res) => {
+      const assertStream = new AssertStream()
+      assertStream.expect('hello')
+      res.pipe(assertStream)
+      const timingHeader = res.headers['server-timing']
+      assert(/total; dur=\d+\.\d{2}[;,]/.test(timingHeader))
+      assert(/manual; dur=\d+\.\d{2}[;,]/.test(timingHeader))
+      assert(/auto; dur=\d+\.\d{2}[;,]/.test(timingHeader))
+      server.close()
+    }))
+  })
+})
