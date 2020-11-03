@@ -41,6 +41,6 @@
     "must-call": "1.0.0",
     "nyc": "15.1.0",
     "power-assert": "1.6.1",
-    "standard": "14.3.4"
+    "standard": "16.0.1"
   }
 }
