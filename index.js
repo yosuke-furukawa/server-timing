@@ -5,6 +5,8 @@ const Timer = require('./timer')
 
 module.exports = function serverTiming (options) {
   const opts = Object.assign({
+    name: 'total',
+    description: 'Total Response Time',
     total: true,
     enabled: true,
     autoEnd: true,
@@ -34,7 +36,7 @@ module.exports = function serverTiming (options) {
       if (opts.total) {
         const diff = process.hrtime(startAt)
         const timeSec = (diff[0] * 1E3) + (diff[1] * 1e-6)
-        res.setMetric('total', timeSec, 'Total Response Time')
+        res.setMetric(opts.name, timeSec, opts.description)
       }
       timer.clear()
 

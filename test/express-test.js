@@ -25,6 +25,26 @@ test('express total response', () => {
   })
 })
 
+test('custom timing name and description', () => {
+  const app = express()
+  app.use(serverTiming({
+    name: 'app',
+    description: 'Service Layer Response Time'
+  }))
+  app.use((req, res, next) => {
+    res.send('hello')
+  })
+  const server = app.listen(0, () => {
+    http.get(`http://localhost:${server.address().port}/`, mustCall((res) => {
+      const assertStream = new AssertStream()
+      assertStream.expect('hello')
+      res.pipe(assertStream)
+      assert(/app; dur=.*; desc="Service Layer Response Time"/.test(res.headers['server-timing']))
+      server.close()
+    }))
+  })
+})
+
 test('express add some custom server timing header', () => {
   const app = express()
   app.use(serverTiming())
