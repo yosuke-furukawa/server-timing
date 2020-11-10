@@ -1,6 +1,8 @@
 declare module "server-timing" {
   import * as e from "express";
   type Options = {
+    name?: string,
+    description?: string,
     total?: boolean;
     enabled?: boolean | IsEnabledCheck;
     autoEnd?: boolean;
