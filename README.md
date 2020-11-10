@@ -64,6 +64,8 @@ app.use(serverTiming({
 
 ## constructor(options)
 
+- options.name: string, default `total`, name for the timing item
+- options.description: string, default `Total Response Time`, explanation for the timing item
 - options.total: boolean, default `true`, add total response time
 - options.enabled: boolean | function, default `true`, enable server timing header. If a function is passed, it will be called with two arguments, `request` and `response`, and should return a boolean.
 - options.autoEnd: boolean, default `true` automatically endTime is called if timer is not finished.
