@@ -46,7 +46,7 @@ module.exports = function serverTiming (options) {
       if (enabled) {
         const existingHeaders = res.getHeader('Server-Timing')
 
-        res.setHeader('Server-Timing', [].concat(existingHeaders || []).concat(headers).join(', '))
+        res.setHeader('Server-Timing', [].concat(existingHeaders || []).concat(headers))
       }
     })
     if (typeof next === 'function') {
