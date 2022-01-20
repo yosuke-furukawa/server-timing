@@ -44,6 +44,37 @@ test('success: http append more server timing response', () => {
   })
 })
 
+test('success: http append more than one server timing header', () => {
+  const server = http.createServer((req, res) => {
+    serverTiming()(req, res)
+    res.setMetric('foo', 100.0)
+    res.setMetric('bar', 10.0, 'Bar is not Foo')
+    res.setMetric('baz', 0)
+    res.end('hello')
+  }).listen(0, () => {
+    http.get(`http://localhost:${server.address().port}/`, mustCall((res) => {
+      const assertStream = new AssertStream()
+      assertStream.expect('hello')
+      res.pipe(assertStream)
+
+      const serverTimingHeaders = []
+      res.rawHeaders.forEach(
+        (key, index) => {
+          key === 'Server-Timing' && serverTimingHeaders.push(res.rawHeaders[index + 1])
+        }
+      )
+
+      assert(serverTimingHeaders.length === 4)
+      serverTimingHeaders.forEach(
+        value => assert(
+          /^\w+;\sdur=\d+(\.\d+)?(;\sdesc="[\w\s]+")?$/.test(value)
+        )
+      )
+      server.close()
+    }))
+  })
+})
+
 test('success: http request twice more server timing response', () => {
   let count = 0
   const server = http.createServer((req, res) => {
