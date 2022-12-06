@@ -27,12 +27,12 @@
   },
   "homepage": "https://github.com/yosuke-furukawa/server-timing#readme",
   "dependencies": {
-    "@types/express": "^4.17.3",
-    "@types/node": "^16.0.0",
     "minimist": "^1.2.5",
     "on-headers": "^1.0.2"
   },
   "devDependencies": {
+    "@types/express": "^4.17.3",
+    "@types/node": "^16.0.0",
     "assert-stream": "1.1.1",
     "coveralls": "3.1.1",
     "eater": "4.0.4",
