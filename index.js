@@ -41,7 +41,8 @@ module.exports = function serverTiming (options) {
       timer.clear()
 
       const enabled = typeof opts.enabled === 'function'
-        ? opts.enabled(req, res) : opts.enabled
+        ? opts.enabled(req, res)
+        : opts.enabled
 
       if (enabled) {
         const existingHeaders = res.getHeader('Server-Timing')
@@ -65,10 +66,12 @@ function setMetric (headers, opts) {
     }
 
     const dur = Number.isFinite(opts.precision)
-      ? value.toFixed(opts.precision) : value
+      ? value.toFixed(opts.precision)
+      : value
 
     const metric = typeof description !== 'string' || !description
-      ? `${name}; dur=${dur}` : `${name}; dur=${dur}; desc="${description}"`
+      ? `${name}; dur=${dur}`
+      : `${name}; dur=${dur}; desc="${description}"`
 
     headers.push(metric)
   }

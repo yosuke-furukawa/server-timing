@@ -7,8 +7,8 @@ class Timer {
 
   time (name, description) {
     this._times.set(name, {
-      name: name,
-      description: description,
+      name,
+      description,
       start: process.hrtime()
     })
   }
