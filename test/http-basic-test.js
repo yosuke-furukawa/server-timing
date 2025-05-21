@@ -2,7 +2,7 @@
 
 const test = require('eater/runner').test
 const http = require('http')
-const {URL} = require('url')
+const { URL } = require('url')
 const serverTiming = require('../.')
 const assert = require('assert')
 const mustCall = require('must-call')
@@ -153,7 +153,7 @@ test('success: no response (conditional)', () => {
     serverTiming({
       enabled: req => {
         const url = new URL(req.url, `http://${req.headers.host}`)
-        return url.searchParams.get("debug") === "true"
+        return url.searchParams.get('debug') === 'true'
       }
     })(req, res)
     res.setMetric('foo', 100.0)
@@ -196,7 +196,7 @@ test('success: stop automatically timer', () => {
 
 test('success: stop automatically timer (without total)', () => {
   const server = http.createServer((req, res) => {
-    serverTiming({total: false})(req, res)
+    serverTiming({ total: false })(req, res)
     res.startTime('foo', 'foo')
     res.end('hello')
   }).listen(0, () => {
@@ -214,7 +214,7 @@ test('success: stop automatically timer (without total)', () => {
 
 test('success: specify precision', () => {
   const server = http.createServer((req, res) => {
-    serverTiming({precision: 3})(req, res)
+    serverTiming({ precision: 3 })(req, res)
     res.setMetric('manual', 100 / 3)
     res.startTime('auto')
     process.nextTick(() => {
